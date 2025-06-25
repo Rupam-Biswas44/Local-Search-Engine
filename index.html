@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantic Search Engine</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEJx6X4jZf8K4b93pX5Op3uzER0gml+3oHjxk5+1kpZP6EckWn7saVcXmj3h4" crossorigin="anonymous">
+
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <!-- Google Fonts for better typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #0f0c29, #302b63, #24243e); /* Dark gradient */
+            color: #fff;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.7); /* Dark navbar */
+            padding: 25px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+            position: absolute;
+            top: 0;
+            width: 100%;
+        }
+
+        .navbar-brand {
+            color: #fff;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+
+        /* Main Content Container */
+        .container {
+            background-color: #fff;
+            padding: 40px 60px;
+            border-radius: 20px;
+            box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.15);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        /* Heading */
+        h1 {
+            font-size: 2.5rem;
+            color: #0d6efd;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Description Below Heading */
+        .description {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #d3d3d3;
+            font-weight: 500;
+        }
+
+        /* Search Bar */
+        #queryInput {
+            width: 80%;
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 2px solid #0d6efd;
+            border-radius: 30px;
+            margin-bottom: 30px;
+            transition: 0.3s;
+        }
+
+        #queryInput:focus {
+            border-color: #0a58ca;
+            box-shadow: 0 0 10px rgba(13, 106, 253, 0.6);
+            outline: none;
+        }
+
+        /* Button Styling */
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            background-color: #0d6efd;
+            color: white;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0a58ca;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Result Box Styling */
+        .result {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+        }
+
+        .result:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .result h3 {
+            font-size: 1.5rem;
+            color: #0d6efd;
+        }
+
+        .result p {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            #queryInput {
+                width: 90%;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .result {
+                padding: 15px;
+            }
+        }
+
+        /* Scrollable Results */
+        #results {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a class="navbar-brand" href="#">Semantic Search Engine</a>
+    </nav>
+
+    <div class="container">
+        <!-- Main Heading -->
+        <h1>Search the Knowledge Base</h1>
+
+        <!-- Description of Search Functionality -->
+        <div class="description">
+            <p>This search engine provides answers to questions like:</p>
+            <ul style="list-style-type: none; padding-left: 0;">
+                <li><strong>"What is AI?"</strong></li>
+                <li><strong>"How does AI work?"</strong></li>
+                <li><strong>"Applications of AI in healthcare."</strong></li>
+            </ul>
+            <p>Enter your query and get the most relevant documents.</p>
+        </div>
+
+        <input type="text" id="queryInput" class="form-control" placeholder="Enter your search query...">
+        <button onclick="search()">Search <i class="fas fa-search"></i></button>
+
+        <div id="results"></div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pzjw8f+ua7Kw1TIq0sihzX7hxjT0hIFX5AM1YsT3u8/5Aq8X5zyit3z8Qpxi10Wq" crossorigin="anonymous">
+    </script>
+
+    <script>
+        async function search() {
+            const query = document.getElementById('queryInput').value;
+
+            // Check if the input field is empty
+            if (!query.trim()) {
+                alert("Please enter a search query.");
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5001/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ query: query, top_k: 3 })
+                });
+
+                if (!response.ok) {
+                    console.error('API error:', response.statusText);
+                    alert('Failed to fetch results from the API.');
+                    return;
+                }
+
+                const results = await response.json();
+
+                if (!Array.isArray(results) || results.length === 0) {
+                    alert('No results found.');
+                    return;
+                }
+
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = '';
+
+                results.forEach((item, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'result';
+                    div.innerHTML = `
+                        <h3>Rank ${index + 1}: ${item.title}</h3>
+                        <p><strong>Score:</strong> ${item.score.toFixed(4)}</p>
+                        <p>${item.content.slice(0, 300)}...</p>
+                    `;
+                    resultsDiv.appendChild(div);
+                });
+            } catch (error) {
+                console.error('Error during search:', error);
+                alert('An error occurred while fetching search results.');
+            }
+        }
+    </script>
+
+</body>
+
+</html>
